@@ -30,6 +30,18 @@ namespace BinarySearchTree
         public Node root;
         public int size;
 
+        public int depth
+        {
+            get
+            {
+                return this.CalculateDepth(root);
+            }
+            set
+            {
+                depth = value; 
+            }
+        }
+
         public BinarySearchTree()
         {
             root = null; 
@@ -39,6 +51,22 @@ namespace BinarySearchTree
         {
             root = node; 
         }
+
+
+        int CalculateDepth(Node node)
+        {
+            if (node == null)
+                return 0;
+
+            int leftDepth = CalculateDepth(node.leftChild);
+            int rightDepth = CalculateDepth(node.rightChild);
+
+            if (leftDepth > rightDepth)
+                return (leftDepth + 1);
+            else
+                return (rightDepth + 1);  
+        }
+        
 
         /// <summary>
         /// Insert a node into the tree. 
@@ -134,18 +162,67 @@ namespace BinarySearchTree
         {
             BinarySearchTree bst = new BinarySearchTree();
 
-
             bst.InsertNode(5);
             bst.InsertNode(7);
             bst.InsertNode(3);
+            bst.InsertNode(9);
+            bst.InsertNode(1); 
 
-            PrintPreOrder(bst.root);
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\t1. Insert a new node");
+            Console.WriteLine("\t2. Print the tree pre-order");
+            Console.WriteLine("\t3. Calculate the depth of the tree.");
+            Console.WriteLine("\t4. Print the tree level order");
 
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadLine(); 
+            Console.WriteLine("\n\tPress ESC to exit."); 
+
+            var key = Console.ReadKey();
+
+            while (key.Key != ConsoleKey.Escape)
+            {
+                Console.WriteLine(); 
+
+                switch (key.KeyChar)
+                {
+                    case '1':
+                        Console.Write("\nEnter the number you'd like to insert into the tree: ");
+                        var str = Console.ReadLine();
+                        int newValue = Convert.ToInt32(str);
+
+                        bst.InsertNode(newValue);
+                        Console.WriteLine();
+                        break; 
+                    case '2':
+                        PrintPreOrder(bst.root);
+                        break; 
+                    case '3':
+                        var depth = bst.depth;
+                        Console.WriteLine("Depth: " + depth);
+                        break; 
+                    case '4':
+                        PrintTreeTopDown(bst);  
+                        break; 
+                    default:
+                        break; 
+                }
+
+                Console.WriteLine();
+
+                ShowMenu();
+                key = Console.ReadKey(); 
+            }
+
             
            
             
+        }
+
+        public static void ShowMenu()
+        {
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("\t1. Insert a new node");
+            Console.WriteLine("\t2. Print the tree pre-order");
+            Console.WriteLine("Press ESC to exit."); 
         }
 
         /// <summary>
@@ -158,21 +235,54 @@ namespace BinarySearchTree
             {
                 return;
             }
-            Console.Write("\t");
 
-            Console.Write(root.value);
+            if (root.leftChild == null && root.rightChild == null)
+                Console.WriteLine("Value: " + root.value);
+            else if (root.leftChild != null && root.rightChild == null)
+                Console.WriteLine("Value: " + root.value + "\tLeft child: " + root.leftChild.value); 
+            else if(root.leftChild == null && root.rightChild != null)
+                Console.WriteLine("Value: " + root.value + "\tRight child: " + root.rightChild.value); 
+            else
+                Console.WriteLine("Value: " + root.value + "\tLeft child: " + root.leftChild.value + "\tRight child: " + root.rightChild.value);
 
-            Console.Write("\t");
+            if (root.leftChild != null)
+            {
+                PrintPreOrder(root.leftChild);
+                
+            }
 
-            Console.Write("\n"); 
-      
-            PrintPreOrder(root.leftChild);
-
-            Console.Write("\t");
-
-            PrintPreOrder(root.rightChild);
+            if (root.rightChild != null)
+            {
+                PrintPreOrder(root.rightChild);
+            }
         }
 
-        
+        public static void PrintTreeTopDown(BinarySearchTree tree)
+        {
+            int i;
+
+            for (i = 0; i < tree.depth; i++)
+            {
+                Console.Write("Level " + i + ": "); 
+                var str = PrintLevel(tree.root, i);
+                Console.WriteLine(str); 
+            }
+        }
+
+        public static string PrintLevel(Node node, int level)
+        {
+            if (node == null)
+                return "";
+
+            if (level == 0)
+                return node.value.ToString() + " "; 
+
+            var leftString = PrintLevel(node.leftChild, level - 1);
+            var rightString = PrintLevel(node.rightChild, level - 1);
+
+            return leftString + rightString; 
+        }
+
+ 
     }
 }
