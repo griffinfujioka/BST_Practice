@@ -52,7 +52,11 @@ namespace BinarySearchTree
             root = node; 
         }
 
-
+        /// <summary>
+        /// Calculate the depth of the tree. 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         int CalculateDepth(Node node)
         {
             if (node == null)
@@ -153,6 +157,40 @@ namespace BinarySearchTree
             }
         }
 
+        /// <summary>
+        /// Perform Breadth First Search on the BST, searching for the provided value.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int? BreadthFirstSearch(Node node, int value)
+        {
+            Queue<Node> myQueue = new Queue<Node>();
+
+            if (node == null)
+                return null;
+
+            myQueue.Enqueue(node);
+
+            while (myQueue.Count > 0)
+            {
+                Node current = myQueue.Dequeue();
+
+                if (current == null)
+                    continue;
+                else if (current.value == value)
+                    return value; 
+                myQueue.Enqueue(current.leftChild);
+                myQueue.Enqueue(current.rightChild); 
+            }
+
+            BreadthFirstSearch(node.leftChild, value);
+            BreadthFirstSearch(node.rightChild, value); 
+
+
+            return -1;
+        }
+
         
     }
 
@@ -173,6 +211,7 @@ namespace BinarySearchTree
             Console.WriteLine("\t2. Print the tree pre-order");
             Console.WriteLine("\t3. Calculate the depth of the tree.");
             Console.WriteLine("\t4. Print the tree level order");
+            Console.WriteLine("\t5. Perform breadth-first search on the tree."); 
 
             Console.WriteLine("\n\tPress ESC to exit."); 
 
@@ -201,6 +240,15 @@ namespace BinarySearchTree
                         break; 
                     case '4':
                         PrintTreeTopDown(bst);  
+                        break; 
+                    case '5':
+                        Console.Write("\nWhat number are we looking for?: ");
+                        var searchStr = Console.ReadLine();
+                        int searchValue = Convert.ToInt32(searchStr);
+                        int? found = bst.BreadthFirstSearch(bst.root, searchValue);
+
+                        if (found != null)
+                            Console.WriteLine("Found {0}!", searchValue); 
                         break; 
                     default:
                         break; 
@@ -257,6 +305,10 @@ namespace BinarySearchTree
             }
         }
 
+        /// <summary>
+        /// Print the tree level order starting from the top down
+        /// </summary>
+        /// <param name="tree"></param>
         public static void PrintTreeTopDown(BinarySearchTree tree)
         {
             int i;
@@ -269,6 +321,12 @@ namespace BinarySearchTree
             }
         }
 
+        /// <summary>
+        /// Recursive function for printing a tree level order. 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
         public static string PrintLevel(Node node, int level)
         {
             if (node == null)
