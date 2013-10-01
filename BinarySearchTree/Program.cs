@@ -28,7 +28,17 @@ namespace BinarySearchTree
     class BinarySearchTree
     {
         public Node root;
-        public int size;
+        public int size
+        {
+            get
+            {
+                return this.CountNodes(root);
+            }
+            set
+            {
+                size = value;
+            }
+        }
 
         public int depth
         {
@@ -69,6 +79,28 @@ namespace BinarySearchTree
                 return (leftDepth + 1);
             else
                 return (rightDepth + 1);  
+        }
+
+        /// <summary>
+        /// Count the number of nodes in the tree
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private int CountNodes(Node node)
+        {
+            int sum;
+
+            if (node == null)
+                return 0;
+            else
+                sum = 1; 
+
+            if(node.leftChild != null) 
+                sum += CountNodes(node.leftChild);
+            if (node.rightChild != null)
+                sum += CountNodes(node.rightChild);
+
+            return sum;
         }
         
 
@@ -190,13 +222,6 @@ namespace BinarySearchTree
 
         public void Balance()
         {
-            // Algorithm: 
-            //      - Make a list out of the tree
-            //      - Find a suitable middle element, will serve as root 
-            //      - Empty the tree
-            //      - Insert the root 
-
-
             // Make a sorted list out of the tree
             var list = this.ToList();
             list.Sort((x, y) => x.value.CompareTo(y.value));
@@ -321,6 +346,7 @@ namespace BinarySearchTree
             Console.WriteLine("\t6. Clear the tree.");
             Console.WriteLine("\t7. Balance the tree."); 
             Console.WriteLine("\t8. Validate a BST.");
+            Console.WriteLine("\t9. Count nodes in a tree.");
             Console.WriteLine("\n\tPress ESC to exit."); 
 
             var key = Console.ReadKey();
@@ -373,6 +399,9 @@ namespace BinarySearchTree
                         else
                             Console.WriteLine("The tree is not a valid BST"); 
                         break;
+                    case '9':
+                        Console.WriteLine("{0} nodes in the tree", bst.size);
+                        break; 
                     default:
                         break; 
                 }
