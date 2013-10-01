@@ -251,6 +251,51 @@ namespace BinarySearchTree
         {
             this.root = null;  
         }
+
+
+        /// <summary>
+        /// Validate if the tree is a valid BST, or just a BST
+        /// </summary>
+        /// <returns>True if the tree is a valid BST, else returns false.</returns>
+        public bool IsValid()
+        {
+            var isValid = Validate(this.root); 
+            return isValid; 
+        }
+
+        /// <summary>
+        /// Recursive function for validating a BST. 
+        /// </summary>
+        /// <returns></returns>
+        public bool Validate(Node node)
+        {
+            if (node == null)
+                return false;
+
+            if (node.leftChild != null)
+            {
+                if (node.leftChild.value > node.value)
+                    return false;
+
+                Validate(node.leftChild);
+            }
+
+
+            if (node.rightChild != null)
+            {
+                if (node.rightChild.value < node.value)
+                                return false;
+
+                Validate(node.rightChild);
+            }
+
+            
+
+            
+            
+
+            return true; 
+        }
         
     }
 
@@ -265,6 +310,7 @@ namespace BinarySearchTree
             bst.InsertNode(3);
             bst.InsertNode(9);
             bst.InsertNode(1); 
+            
 
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("\t1. Insert a new node");
@@ -274,7 +320,7 @@ namespace BinarySearchTree
             Console.WriteLine("\t5. Perform breadth-first search on the tree.");
             Console.WriteLine("\t6. Clear the tree.");
             Console.WriteLine("\t7. Balance the tree."); 
-
+            Console.WriteLine("\t8. Validate a BST.");
             Console.WriteLine("\n\tPress ESC to exit."); 
 
             var key = Console.ReadKey();
@@ -320,6 +366,12 @@ namespace BinarySearchTree
                         break; 
                     case '7':
                         bst.Balance();
+                        break;
+                    case '8':
+                        if (bst.IsValid())
+                            Console.WriteLine("The tree is a valid BST");
+                        else
+                            Console.WriteLine("The tree is not a valid BST"); 
                         break;
                     default:
                         break; 
