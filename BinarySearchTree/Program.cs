@@ -160,17 +160,17 @@ namespace BinarySearchTree
         /// <summary>
         /// Perform Breadth First Search on the BST, searching for the provided value.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="root"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public int? BreadthFirstSearch(Node node, int value)
+        public int? BreadthFirstSearch(Node root, int value)
         {
             Queue<Node> myQueue = new Queue<Node>();
 
-            if (node == null)
+            if (root == null)
                 return null;
 
-            myQueue.Enqueue(node);
+            myQueue.Enqueue(root);
 
             while (myQueue.Count > 0)
             {
@@ -184,13 +184,73 @@ namespace BinarySearchTree
                 myQueue.Enqueue(current.rightChild); 
             }
 
-            BreadthFirstSearch(node.leftChild, value);
-            BreadthFirstSearch(node.rightChild, value); 
 
-
-            return -1;
+            return null;
         }
 
+        public void Balance()
+        {
+            // Algorithm: 
+            //      - Make a list out of the tree
+            //      - Find a suitable middle element, will serve as root 
+            //      - Empty the tree
+            //      - Insert the root 
+
+
+            // Make a sorted list out of the tree
+            var list = this.ToList();
+            list.Sort((x, y) => x.value.CompareTo(y.value));
+
+            // Empty the tree
+            this.Clear();
+
+            // Choose middle element as root
+            this.root = list[Convert.ToInt32(Math.Floor((double)list.Count / 2))];
+
+            list.Remove(this.root);
+
+            foreach (var node in list)
+            {
+                this.InsertNode(node); 
+            }
+            
+            
+        }
+
+        /// <summary>
+        /// Convert the tree to a list. 
+        /// </summary>
+        /// <returns></returns>
+        public List<Node> ToList()
+        {
+            Queue<Node> myQueue = new Queue<Node>();
+            var list = new List<Node>();
+
+            myQueue.Enqueue(this.root);
+
+            while (myQueue.Count > 0)
+            {
+                var node = myQueue.Dequeue();
+
+                list.Add(node);
+
+                if(node.leftChild != null)
+                    myQueue.Enqueue(node.leftChild);
+
+                if(node.rightChild != null)
+                    myQueue.Enqueue(node.rightChild);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Clear the list
+        /// </summary>
+        public void Clear()
+        {
+            this.root = null;  
+        }
         
     }
 
@@ -211,7 +271,9 @@ namespace BinarySearchTree
             Console.WriteLine("\t2. Print the tree pre-order");
             Console.WriteLine("\t3. Calculate the depth of the tree.");
             Console.WriteLine("\t4. Print the tree level order");
-            Console.WriteLine("\t5. Perform breadth-first search on the tree."); 
+            Console.WriteLine("\t5. Perform breadth-first search on the tree.");
+            Console.WriteLine("\t6. Clear the tree.");
+            Console.WriteLine("\t7. Balance the tree."); 
 
             Console.WriteLine("\n\tPress ESC to exit."); 
 
@@ -248,8 +310,17 @@ namespace BinarySearchTree
                         int? found = bst.BreadthFirstSearch(bst.root, searchValue);
 
                         if (found != null)
-                            Console.WriteLine("Found {0}!", searchValue); 
+                            Console.WriteLine("Found {0}!", searchValue);
+                        else
+                            Console.WriteLine("{0} was not found in the tree.", searchValue); 
                         break; 
+                    case '6':
+                        bst = new BinarySearchTree();
+                        Console.WriteLine("Cleared the tree.");
+                        break; 
+                    case '7':
+                        bst.Balance();
+                        break;
                     default:
                         break; 
                 }
@@ -270,6 +341,10 @@ namespace BinarySearchTree
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("\t1. Insert a new node");
             Console.WriteLine("\t2. Print the tree pre-order");
+            Console.WriteLine("\t3. Calculate the depth of the tree.");
+            Console.WriteLine("\t4. Print the tree level order");
+            Console.WriteLine("\t5. Perform breadth-first search on the tree.");
+            Console.WriteLine("\t6. Clear the tree.");
             Console.WriteLine("Press ESC to exit."); 
         }
 
