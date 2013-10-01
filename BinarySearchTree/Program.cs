@@ -131,6 +131,8 @@ namespace BinarySearchTree
                         InsertNode(root.rightChild, node);
                 }
             }
+
+            CalculateDepth(this.root);
         }
 
         /// <summary>
@@ -197,6 +199,7 @@ namespace BinarySearchTree
         /// <returns></returns>
         public int? BreadthFirstSearch(Node root, int value)
         {
+            // Use the FIFO stack 
             Queue<Node> myQueue = new Queue<Node>();
 
             if (root == null)
@@ -218,6 +221,40 @@ namespace BinarySearchTree
 
 
             return null;
+        }
+
+
+        /// <summary>
+        /// Perfrom Depth First Search on the BST, searching for the provided value. 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int? DepthFirstSearch(Node root, int value)
+        {
+            // Use the LIFO stack 
+            Stack<Node> myStack = new Stack<Node>();
+
+            if (root == null)
+                return null;
+
+            myStack.Push(root);
+
+            while (myStack.Count > 0)
+            {
+                Node current = myStack.Pop();
+
+                if (current == null)
+                    continue;
+                else if (current.value == value)
+                    return value;
+
+                myStack.Push(current.leftChild);
+                myStack.Push(current.rightChild);
+
+            }
+
+            return null; 
         }
 
         public void Balance()
@@ -321,6 +358,50 @@ namespace BinarySearchTree
 
             return true; 
         }
+
+        /// <summary>
+        /// Calculate the path through the tree that will result in the maximum sum. 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns>An integer array of all nodes in the path.</returns>
+        public int[] MaxSumPath(Node node)
+        {
+            int[] returnArray = new int[this.depth];     // there will be at most this.depth nodes
+            int i = 0;
+
+
+            if (this.IsValid())
+            {
+                // Now the path is simple; follow the right child all the way down 
+                Node current = this.root;
+
+                while (current != null)
+                {
+                    returnArray[i] = current.value;
+                    i++;
+
+                    current = current.rightChild;
+                }
+            }
+            else
+            {
+                // Not a valid BST, let's balance it 
+                Balance();
+
+                Node current = this.root;
+
+                while (current != null)
+                {
+                    returnArray[i] = current.value;
+                    i++;
+
+                    current = current.rightChild;
+                }
+
+            }
+
+            return returnArray; 
+        }
         
     }
 
@@ -347,17 +428,19 @@ namespace BinarySearchTree
             Console.WriteLine("\t7. Balance the tree."); 
             Console.WriteLine("\t8. Validate a BST.");
             Console.WriteLine("\t9. Count nodes in a tree.");
+            Console.WriteLine("\t10. Perform depth-first search on the tree.");
+            Console.WriteLine("\t11. Find the Maximum Sum Path ."); 
             Console.WriteLine("\n\tPress ESC to exit."); 
 
-            var key = Console.ReadKey();
+            var line = Console.ReadLine();
 
-            while (key.Key != ConsoleKey.Escape)
+            while (true)
             {
                 Console.WriteLine(); 
 
-                switch (key.KeyChar)
+                switch (line)
                 {
-                    case '1':
+                    case "1":
                         Console.Write("\nEnter the number you'd like to insert into the tree: ");
                         var str = Console.ReadLine();
                         int newValue = Convert.ToInt32(str);
@@ -365,17 +448,17 @@ namespace BinarySearchTree
                         bst.InsertNode(newValue);
                         Console.WriteLine();
                         break; 
-                    case '2':
+                    case "2":
                         PrintPreOrder(bst.root);
                         break; 
-                    case '3':
+                    case "3":
                         var depth = bst.depth;
                         Console.WriteLine("Depth: " + depth);
                         break; 
-                    case '4':
+                    case "4":
                         PrintTreeTopDown(bst);  
                         break; 
-                    case '5':
+                    case "5":
                         Console.Write("\nWhat number are we looking for?: ");
                         var searchStr = Console.ReadLine();
                         int searchValue = Convert.ToInt32(searchStr);
@@ -386,21 +469,43 @@ namespace BinarySearchTree
                         else
                             Console.WriteLine("{0} was not found in the tree.", searchValue); 
                         break; 
-                    case '6':
+                    case "6":
                         bst = new BinarySearchTree();
                         Console.WriteLine("Cleared the tree.");
                         break; 
-                    case '7':
+                    case "7":
                         bst.Balance();
                         break;
-                    case '8':
+                    case "8":
                         if (bst.IsValid())
                             Console.WriteLine("The tree is a valid BST");
                         else
                             Console.WriteLine("The tree is not a valid BST"); 
                         break;
-                    case '9':
+                    case "9":
                         Console.WriteLine("{0} nodes in the tree", bst.size);
+                        break; 
+                    case "10":
+                        Console.Write("\nWhat number are we looking for?: ");
+                        searchStr = Console.ReadLine();
+                        searchValue = Convert.ToInt32(searchStr);
+                        found = bst.DepthFirstSearch(bst.root, searchValue);
+
+                        if (found != null)
+                            Console.WriteLine("Found {0}!", searchValue);
+                        else
+                            Console.WriteLine("{0} was not found in the tree.", searchValue); 
+                        break; 
+                    case "11":
+                        var maxSumPath = bst.MaxSumPath(bst.root);
+                        int sum = 0; 
+                        foreach (var value in maxSumPath)
+                        {
+                            Console.Write("{0} ", value);
+                            sum += value; 
+                        }
+
+                        Console.Write(" = {0}", sum); 
                         break; 
                     default:
                         break; 
@@ -409,7 +514,7 @@ namespace BinarySearchTree
                 Console.WriteLine();
 
                 ShowMenu();
-                key = Console.ReadKey(); 
+                line = Console.ReadLine(); 
             }
 
             
@@ -426,6 +531,12 @@ namespace BinarySearchTree
             Console.WriteLine("\t4. Print the tree level order");
             Console.WriteLine("\t5. Perform breadth-first search on the tree.");
             Console.WriteLine("\t6. Clear the tree.");
+            Console.WriteLine("\t7. Balance the tree.");
+            Console.WriteLine("\t8. Validate a BST.");
+            Console.WriteLine("\t9. Count nodes in a tree.");
+            Console.WriteLine("\t10. Perform depth-first search on the tree.");
+            Console.WriteLine("\t11. Find the Maximum Sum Path .");
+            Console.WriteLine("\n\tPress ESC to exit."); 
             Console.WriteLine("Press ESC to exit."); 
         }
 
