@@ -307,7 +307,7 @@ namespace BinarySearchTree
         }
 
         /// <summary>
-        /// Clear the list
+        /// Clear the tree
         /// </summary>
         public void Clear()
         {
@@ -352,10 +352,6 @@ namespace BinarySearchTree
             }
 
             
-
-            
-            
-
             return true; 
         }
 
@@ -507,6 +503,12 @@ namespace BinarySearchTree
 
                         Console.Write(" = {0}", sum); 
                         break; 
+                    case "12":
+                        PrintInOrder(bst.root); 
+                        break; 
+                    case "13":
+                        PrintPostOrder(bst.root);
+                        break; 
                     default:
                         break; 
                 }
@@ -536,6 +538,8 @@ namespace BinarySearchTree
             Console.WriteLine("\t9. Count nodes in a tree.");
             Console.WriteLine("\t10. Perform depth-first search on the tree.");
             Console.WriteLine("\t11. Find the Maximum Sum Path .");
+            Console.WriteLine("\t12. Print the tree in-order");
+            Console.WriteLine("\t13. Print the tree in-order");
             Console.WriteLine("\n\tPress ESC to exit."); 
             Console.WriteLine("Press ESC to exit."); 
         }
@@ -569,6 +573,43 @@ namespace BinarySearchTree
             if (root.rightChild != null)
             {
                 PrintPreOrder(root.rightChild);
+            }
+        }
+
+        /// <summary>
+        /// Print the tree Post-Order 
+        /// </summary>
+        /// <param name="root"></param>
+        public static void PrintPostOrder(Node root)
+        {
+            if (root == null)
+                return;
+
+            PrintPostOrder(root.leftChild);
+            PrintPostOrder(root.rightChild);
+
+            Console.WriteLine(root.value); 
+        }
+
+        /// <summary>
+        /// Print the tree In Order 
+        /// </summary>
+        /// <param name="root"></param>
+        public static void PrintInOrder(Node root)
+        {
+            if (root == null)
+                return; 
+
+            if (root.leftChild != null)
+            {
+                PrintInOrder(root.leftChild);
+            }
+
+            Console.WriteLine(root.value); 
+
+            if (root.rightChild != null)
+            {
+                PrintInOrder(root.rightChild); 
             }
         }
 
