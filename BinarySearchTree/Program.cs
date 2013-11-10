@@ -398,6 +398,81 @@ namespace BinarySearchTree
 
             return returnArray; 
         }
+
+        /// <summary>
+        /// Given two nodes, return their first common parent. 
+        /// That is, the common parent with the lowest depth. 
+        /// </summary>
+        /// <param name="n1"></param>
+        /// <param name="n2"></param>
+        /// <returns></returns>
+        public Node FirstCommonParent(int n1, int n2)
+        {
+            Node parentNode = new Node(0);
+            int n1Depth, n2Depth, smallestDepth; 
+
+            n1Depth = DetermineDepth(n1); 
+            n2Depth = DetermineDepth(n2);
+
+            if (n1Depth < n2Depth)
+                smallestDepth = n1Depth;
+            else
+                smallestDepth = n2Depth;
+
+           
+
+            return parentNode; 
+        }
+
+        /// <summary>
+        /// Given a node in the tree
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private int DetermineDepth(int value)
+        {
+            int depthCounter = 0; 
+            Stack<Node> myStack = new Stack<Node>();
+
+            if (root == null)
+                return -1;
+
+            myStack.Push(root);
+
+            while (myStack.Count > 0)
+            {
+                Node current = myStack.Pop();
+
+                if (current == null)
+                    continue;
+                else if (current.value == value)
+                    return depthCounter;
+
+                myStack.Push(current.leftChild);
+                myStack.Push(current.rightChild);
+                depthCounter++; 
+
+            }
+
+            return -1; 
+        }
+
+        /// <summary>
+        /// Determine if the parent node has the given ancestor.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="ancestor"></param>
+        /// <returns></returns>
+        private bool IsAncestorOf(Node parent, Node ancestor)
+        {
+            // Balance the tree before we do anything 
+            this.Balance();
+
+            if (DepthFirstSearch(parent, ancestor.value) != null)
+                return true;
+
+            return false; 
+        }
         
     }
 
@@ -415,18 +490,7 @@ namespace BinarySearchTree
             
 
             Console.WriteLine("What would you like to do?");
-            Console.WriteLine("\t1. Insert a new node");
-            Console.WriteLine("\t2. Print the tree pre-order");
-            Console.WriteLine("\t3. Calculate the depth of the tree.");
-            Console.WriteLine("\t4. Print the tree level order");
-            Console.WriteLine("\t5. Perform breadth-first search on the tree.");
-            Console.WriteLine("\t6. Clear the tree.");
-            Console.WriteLine("\t7. Balance the tree."); 
-            Console.WriteLine("\t8. Validate a BST.");
-            Console.WriteLine("\t9. Count nodes in a tree.");
-            Console.WriteLine("\t10. Perform depth-first search on the tree.");
-            Console.WriteLine("\t11. Find the Maximum Sum Path ."); 
-            Console.WriteLine("\n\tPress ESC to exit."); 
+            ShowMenu(); 
 
             var line = Console.ReadLine();
 
@@ -509,6 +573,9 @@ namespace BinarySearchTree
                     case "13":
                         PrintPostOrder(bst.root);
                         break; 
+                    case "14":
+                        bst.FirstCommonParent(3, 1); 
+                        break; 
                     default:
                         break; 
                 }
@@ -540,6 +607,7 @@ namespace BinarySearchTree
             Console.WriteLine("\t11. Find the Maximum Sum Path .");
             Console.WriteLine("\t12. Print the tree in-order");
             Console.WriteLine("\t13. Print the tree in-order");
+            Console.WriteLine("\t14. Find first common parent for nodes 3 and 1"); 
             Console.WriteLine("\n\tPress ESC to exit."); 
             Console.WriteLine("Press ESC to exit."); 
         }
